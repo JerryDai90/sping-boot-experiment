@@ -20,19 +20,18 @@ public class FeignRequestInterceptor implements RequestInterceptor {
     @Override
     public void apply(RequestTemplate template) {
 
-
-        {
+        Map<String, Collection<String>> _queries = template.queries();
+        if (!_queries.isEmpty()) {
             //由于在最新的  RFC 3986  规范，+号是不需要编码的，因此spring 实现的是这个规范，这里就需要参数中进行编码先，兼容旧规范。
-            Map<String, Collection<String>> queries = template.queries();
-            Map<String, Collection<String>> encodeQueries = new HashMap<String, Collection<String>>(queries.size());
+            Map<String, Collection<String>> encodeQueries = new HashMap<String, Collection<String>>(_queries.size());
 
-            Iterator<String> iterator = queries.keySet().iterator();
+            Iterator<String> iterator = _queries.keySet().iterator();
             Collection<String> encodeValues = null;
             while (iterator.hasNext()) {
                 encodeValues = new ArrayList<>();
 
                 String key = iterator.next();
-                Collection<String> values = queries.get(key);
+                Collection<String> values = _queries.get(key);
 
                 for (String _str : values) {
                     _str = _str.replaceAll("\\+", "%2B");
@@ -43,7 +42,6 @@ public class FeignRequestInterceptor implements RequestInterceptor {
             template.queries(null);
             template.queries(encodeQueries);
         }
-
 
         //处理POST请求的时候转换成了GET的bug
         if (HttpMethod.POST.name().equals(template.method()) && template.requestBody().length() == 0 && !template.queries().isEmpty()) {
