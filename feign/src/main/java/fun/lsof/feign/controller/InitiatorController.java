@@ -4,6 +4,8 @@ import fun.lsof.feign.service.feign.IProviderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/initiator")
 public class InitiatorController implements IProviderService {
@@ -24,8 +26,21 @@ public class InitiatorController implements IProviderService {
     }
 
     @Override
+    @PostMapping("/post2body4map")
+    public String post2body4map(@RequestBody Map p){
+        return provider.post2body4map(p);
+    }
+
+
+    @Override
     @GetMapping("/get2query")
     public String get2query(String p) {
         return provider.get2query(p);
+    }
+
+    @Override
+    @PostMapping(path = "/post2form", consumes = "application/x-www-form-urlencoded")
+    public String post2form(@RequestParam("p") String p) {
+        return provider.post2form(p);
     }
 }

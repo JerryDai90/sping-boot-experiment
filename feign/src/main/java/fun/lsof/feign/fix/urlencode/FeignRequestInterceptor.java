@@ -9,8 +9,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.*;
 
 import static org.springframework.http.MediaType.APPLICATION_FORM_URLENCODED_VALUE;
@@ -43,7 +41,8 @@ public class FeignRequestInterceptor implements RequestInterceptor {
             template.queries(encodeQueries);
         }
 
-        //处理POST请求的时候转换成了GET的bug
+        // 处理POST请求的时候转换成了GET的bug
+        // 经过调试，如果是参数的，一定会在 queries 对象中，这个时候就对此参数进行处理即可
         if (HttpMethod.POST.name().equals(template.method()) && template.requestBody().length() == 0 && !template.queries().isEmpty()) {
             Object object = MapUtils.getObject(template.headers(), HttpHeaders.CONTENT_TYPE);
             if (null != object) {
@@ -58,11 +57,7 @@ public class FeignRequestInterceptor implements RequestInterceptor {
                         String field = queriesIterator.next();
                         Collection<String> strings = queries.get(field);
                         //由于参数已经做了url编码处理，这里直接拼接即可
-                        try {
-                            builder.append(field + "=" + URLEncoder.encode(StringUtils.join(strings, ","), template.requestCharset().name()));
-                        } catch (UnsupportedEncodingException e) {
-                            e.printStackTrace();
-                        }
+                        builder.append(field + "=" + StringUtils.join(strings, ","));
                         builder.append("&");
                     }
 
