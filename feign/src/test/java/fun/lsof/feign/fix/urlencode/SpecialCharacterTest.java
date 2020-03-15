@@ -27,23 +27,22 @@ public class SpecialCharacterTest {
         HashMap hashMap = new HashMap();
         hashMap.put("field", sc);
 
-        assertEquals("be +", "{\"field\":\""+sc+"\"}", initiator.post2body4map(hashMap));
+        assertEquals("测试基础符号（body map）", "{\"field\":\""+sc+"\"}", initiator.post2body4map(hashMap));
 
-        assertEquals("be +", sc, initiator.post2body(sc));
-        assertEquals("be +", sc, initiator.post2query(sc));
-        assertEquals("be +", sc, initiator.get2query(sc));
+        assertEquals("测试基础符号（body）", sc, initiator.post2body(sc));
+        assertEquals("测试基础符号（post）", sc, initiator.post2query(sc));
+        assertEquals("测试基础符号（get）", sc, initiator.get2query(sc));
 
 
         String sc2 = "~!@#$%^&*()`-={}|[]:\";',./<>? ";
         hashMap.clear();
         hashMap.put("field", sc2);
-        assertEquals("be +", "{\"field\":\"~!@#$%^&*()`-={}|[]:\\\";',./<>? \"}", initiator.post2body4map(hashMap));
+        assertEquals("全部特殊符合（body map）", "{\"field\":\"~!@#$%^&*()`-={}|[]:\\\";',./<>? \"}", initiator.post2body4map(hashMap));
 
-        assertEquals("be +", sc2, initiator.post2body(sc2));
-        assertEquals("be +", sc2, initiator.post2query(sc2));
-        assertEquals("be +", sc2, initiator.get2query(sc2));
+        assertEquals("全部特殊符合（body）", sc2, initiator.post2body(sc2));
+        assertEquals("全部特殊符合（post）", sc2, initiator.post2query(sc2));
+        assertEquals("全部特殊符合（get）", sc2, initiator.get2query(sc2));
 
-        assertEquals("be +", sc2, initiator.post2form(sc2));
     }
 
 }
